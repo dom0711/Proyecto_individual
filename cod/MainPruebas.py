@@ -5,7 +5,7 @@ Created on Thu Jun  6 22:36:40 2024
 @author: Usuario
 """
 
-from Deck import Lista
+from Deck import Mazo
 
 deck_list = ["Snake-Eye Ash", "Snake-Eye Ash", "Snake-Eye Ash", "Snake-Eyes Poplar",
              "Snake-Eye Oak", "Snake-Eye Birch", "Snake-Eyes Flamberge Dragon",
@@ -27,7 +27,8 @@ num_combo_pieces = 5
 num_garnets = 5
 num_non_engine = 0
 
-deck = Lista(num_starters, num_extenders, num_defensives, num_combo_pieces, num_garnets, 
+deck = Mazo(num_starters, num_extenders, num_defensives, num_combo_pieces, num_garnets, 
             num_non_engine, deck_list, deck_size)
 
+hand = deck.hand_sample(5)
 
