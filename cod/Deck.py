@@ -2,14 +2,14 @@
 """
 Modulo Deck
 
-@author: Dominick Rodríguez Trejos
+@author: Dominick Rodríguez Trejos - B76600
 """
 
 class Mazo():
     
     # Constructor
     def __init__(self, starters, extenders, defensives, combo_pieces, garnets,
-                 non_engine, deck_list, deck_count):
+                 non_engine, deck_list):
         '''
         Constructor del objeto Mazo, crea un objeto de tipo Mazo.
         
@@ -37,7 +37,6 @@ class Mazo():
         self.__garnets = garnets
         self.__non_engine = non_engine
         self.__deck_list = deck_list
-        self.__deck_count = deck_count
         
     #Getters
     @property 
@@ -61,9 +60,6 @@ class Mazo():
     @property 
     def deck_list(self):
         return self.__deck_list
-    @property 
-    def deck_count(self):
-        return self.__deck_count
     
     # Setters
     @starters.setter 
@@ -87,9 +83,6 @@ class Mazo():
     @deck_list.setter 
     def deck_list(self, deck_list):
         self.__deck_list = deck_list
-    @deck_count.setter 
-    def deck_count(self, deck_count):
-        self.__deck_count = deck_count
     
     # Str
     def __str__(self):
@@ -100,7 +93,7 @@ class Mazo():
                 \n Cantidad de piezas del combo: {self.__combo_pieces}
                 \n Cantidad de Garnets: {self.__garnets}
                 \n Cantidad de non engine: {self.__non_engine}
-                \n Cantidad de cartas total: {self.__deck_count}
+                \n Cantidad de cartas total: {len(self.__deck_list)}
                 '''
     # Métodos
     def hand_sample(self, num_draw):
@@ -136,7 +129,9 @@ class Mazo():
         '''
         import random
         mano.append(self.__deck_list.pop(random.randint(0, len(self.__deck_list) - 1)))
-
+    
+    
+        
         
         
         
