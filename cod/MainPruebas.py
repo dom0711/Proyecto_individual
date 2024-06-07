@@ -32,3 +32,5 @@ deck = Mazo(num_starters, num_extenders, num_defensives, num_combo_pieces, num_g
 
 hand = deck.hand_sample(5)
 
+deck.draw_card(deck.deck_list, hand)
+
