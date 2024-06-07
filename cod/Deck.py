@@ -93,8 +93,7 @@ class Mazo():
     
     # Str
     def __str__(self):
-        return f'''
-                Deck list: {self.__deck_list} 
+        return f''' Deck list: {self.__deck_list} 
                 \n Cantidad de starters: {self.__starters} 
                 \n Cantidad de extenders: {self.__extenders}
                 \n Cantidad de cartas defensivas: {self.__defensives}
@@ -118,17 +117,26 @@ class Mazo():
         '''
         # Creo una lista vacía, aquí pondré las cartas que toma aletoriamente del deck
         mano = []
-        # Hago una copia del mazo, pues voy a tener que quitar elementos de la lista, ya que
-        # cuando toma una carta del mazo esta se tiene que quitar de las posibles opciones
-        # así no altero la lista original.
-        deck_list_temp = self.__deck_list
+        # Importo random para usar randint y así obtener un número aleatorio entre 0 y el tamaño
+        # del deck - 1, uso el comando pop() porque cuando se toma una carta del deck se debe eliminar
+        # de las posibles cartas a tomar la próxima vez que se tome una carta del deck
         import random
         for i in range(0, num_draw):
-            mano.append(deck_list_temp[random.randint(0, len(deck_list_temp) - 1)])
+            mano.append(self.__deck_list.pop(random.randint(0, len(self.__deck_list) - 1)))
         return mano
     
+    def draw_card(self, deck, mano):
+        '''
+        Método que agrega una carta a la mano de las cartas disponible en el deck
         
-        
+        Parametros:
+            deck: se refiere a las cartas que se tienen disponibles en el deck, tipo list
+            mano: se refiere a la mao que se tiene en el momento antes de tomar una carta 
+                  más del deck, tipo list
+        '''
+        import random
+        mano.append(self.__deck_list.pop(random.randint(0, len(self.__deck_list) - 1)))
+
         
         
         
