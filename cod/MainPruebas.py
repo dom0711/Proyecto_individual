@@ -1,36 +1,44 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jun  6 22:36:40 2024
+Main para hacer pruebas
 
-@author: Usuario
+@author: Dominick Rodríguez Trejos - B76600
 """
 
 from Deck import Mazo
+#interfaz en python takits
 
-deck_list = ["Snake-Eye Ash", "Snake-Eye Ash", "Snake-Eye Ash", "Snake-Eyes Poplar",
-             "Snake-Eye Oak", "Snake-Eye Birch", "Snake-Eyes Flamberge Dragon",
-             "Diabellstar the Black Witch", "Rescue-ACE Hydrant", "Rescue-ACE Hydrant",
-             "Rescue-ACE Hydrant", "Rescue-ACE Air Lifter", "Rescue-ACE Air Lifter", 
-             "Rescue-ACE Impulse", "Rescue-ACE Impulse", "Rescue-ACE Impulse",
-             "Rescue-ACE Fire Attacker", "Rescue-ACE Turbulence", "Rescue-ACE Turbulence",
-             "Rescue-ACE HQ", "RESCUE!", "ALERT!", "CONTAIN!", "EXTINGUISH!", "REINFORCE!",
-             "Original Sinful Spoils - Snake-Eye", "WANTED: Seeker of Sinful Sopils",
-             "WANTED: Seeker of Sinful Sopils", "Called by the Grave", "Called by the Grave",
-             "Infinite Impermanence", "Infinite Impermanence", "Infinite Impermanence", 
-             "Maxx C", "Maxx C", "Maxx C", "Ash Blossom & Joyous Springs", 
-             "Ash Blossom & Joyous Springs", "Ash Blossom & Joyous Springs", "Crossout Designator"]
+import pandas as pd
+
+deck_stats = pd.read_excel("C:\\Users\\usuar\\Desktop\\CA0305\\Proyecto_individual\\docs\\deck_propio.xlsx")
+deck_list = ["Effect Veiler", "Effect Veiler", "Effect Veiler", "Rescue-ACE Hydrant", "Rescue-ACE Hydrant",
+             "Snake-Eyes Poplar", "Snake-Eyes Poplar", "Maxx C", "Maxx C", "Maxx C", 
+             "Ash Blossom & Joyous Springs", "Ash Blossom & Joyous Springs", "Ash Blossom & Joyous Springs",
+             "Rescue-ACE Impulse", "Rescue-ACE Impulse", "Rescue-ACE Air Lifter", "Rescue-ACE Air Lifter",
+             "Rescue-ACE Fire Attacker", "Rescue-ACE Fire Engine", "Diabellstar the Black Witch",
+             "Diabellstar the Black Witch", "Rescue-ACE Preventer", "Rescue-ACE Preventer", 
+             "Rescue-ACE Turbulunce", "Rescue-ACE Turbulunce", "Bonfire", "Bonfire", "Bonfire", 
+             "Original Sinful Spoils - Snake-Eye", "Original Sinful Spoils - Snake-Eye", "Rescue-ACE HQ",
+             "Called by the Grave", "Called by the Grave", "RESCUE!", "ALERT!", "EMERGENCY!", "EMERGENCY!",
+             "EMERGENCY!", "WANTED: Seeker of Sinful Spoils", "CONTAIN!", "EXTINGUISH!", 
+             "Sinful Spoils of Betrayal - Silvera"]
 deck_size = len(deck_list)
-num_starters = 10
-num_extenders = 4
-num_defensives = 16
-num_combo_pieces = 5
-num_garnets = 5
+num_starters = 12
+num_extenders = 5
+num_defensives = 13
+num_combo_pieces = 6
+num_garnets = 6
 num_non_engine = 0
 
 deck = Mazo(num_starters, num_extenders, num_defensives, num_combo_pieces, num_garnets, 
-            num_non_engine, deck_list, deck_size)
+            num_non_engine, deck_list, deck_stats)
 
 hand = deck.hand_sample(5)
+print(hand)
+
 
 deck.draw_card(deck.deck_list, hand)
+print(hand)
+
+
 
