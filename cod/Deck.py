@@ -9,7 +9,7 @@ class Mazo():
     
     # Constructor
     def __init__(self, starters, extenders, defensives, combo_pieces, garnets,
-                 non_engine, deck_list):
+                 non_engine, deck_list, card_stats):
         '''
         Constructor del objeto Mazo, crea un objeto de tipo Mazo.
         
@@ -24,7 +24,7 @@ class Mazo():
             non_engine: se refiere al número de cartas que no corresponde a la base principal
                         del Deck en el Deck, tipo int.
             deck_list: se refiere a la lista de cartas en el Deck, tipo list.
-            deck_count: se refiere a la cantidad de cartas en el Deck, tipo int.
+            card_stats: se refiere a la base que contiene la utilidad de cada carta.
         
         Returns:
             Un objeto de tipo Mazo
@@ -37,6 +37,7 @@ class Mazo():
         self.__garnets = garnets
         self.__non_engine = non_engine
         self.__deck_list = deck_list
+        self.__card_stats = card_stats
         
     #Getters
     @property 
@@ -60,6 +61,9 @@ class Mazo():
     @property 
     def deck_list(self):
         return self.__deck_list
+    @property 
+    def card_stats(self):
+        return self.__card_stats
     
     # Setters
     @starters.setter 
@@ -83,6 +87,9 @@ class Mazo():
     @deck_list.setter 
     def deck_list(self, deck_list):
         self.__deck_list = deck_list
+    @card_stats.setter 
+    def card_stats(self, card_stats):
+        self.__card_stats = card_stats
     
     # Str
     def __str__(self):
@@ -114,8 +121,29 @@ class Mazo():
         # del deck - 1, uso el comando pop() porque cuando se toma una carta del deck se debe eliminar
         # de las posibles cartas a tomar la próxima vez que se tome una carta del deck
         import random
+        import pandas as pd
         for i in range(0, num_draw):
-            mano.append(self.__deck_list.pop(random.randint(0, len(self.__deck_list) - 1)))
+            draw = self.__deck_list.pop(random.randint(0, len(self.__deck_list) - 1))
+            mano.append(draw)
+            indice_draw = self.__card_stats.index[self.__card_stats["Carta"] == draw][0]
+            temp_starters = self.__starters
+            temp_extenders = self.__extenders
+            temp_defensives = self.__defensives
+            temp_combo_pieces = self.__combo_pieces
+            temp_garnets = self.__garnets
+            temp_non_engine = self.__non_engine
+            if self.__card_stats.loc[indice_draw, "Utilidad"] == "Starter":
+                self.__starters = temp_starters - 1
+            elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Extender":
+                self.__extenders = temp_extenders - 1
+            elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Defensive":
+                self.__defensives = temp_defensives - 1
+            elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Combo piece":
+                self.__combo_pieces = temp_combo_pieces - 1
+            elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Garnet":
+                self.__garnets = temp_garnets - 1
+            elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Non engine":
+                self.__non_engine = temp_non_engine - 1
         return mano
     
     def draw_card(self, deck, mano):
@@ -128,9 +156,52 @@ class Mazo():
                   más del deck, tipo list
         '''
         import random
-        mano.append(self.__deck_list.pop(random.randint(0, len(self.__deck_list) - 1)))
+        draw = self.__deck_list.pop(random.randint(0, len(self.__deck_list) - 1))
+        indice_draw = self.__card_stats.index[self.__card_stats["Carta"] == draw][0]
+        mano.append(draw)
+        temp_starters = self.__starters
+        temp_extenders = self.__extenders
+        temp_defensives = self.__defensives
+        temp_combo_pieces = self.__combo_pieces
+        temp_garnets = self.__garnets
+        temp_non_engine = self.__non_engine
+        if self.__card_stats.loc[indice_draw, "Utilidad"] == "Starter":
+            self.__starters = temp_starters - 1
+        elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Extender":
+            self.__extenders = temp_extenders - 1
+        elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Defensive":
+            self.__defensives = temp_defensives - 1
+        elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Combo piece":
+            self.__combo_pieces = temp_combo_pieces - 1
+        elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Garnet":
+            self.__garnets = temp_garnets - 1
+        elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Non engine":
+            self.__non_engine = temp_non_engine - 1
     
-    
+    def calc_hypergeom(self, uti_ideal, cant_ideal, cant_draw):
+        '''
+        Método que determina la probabilidad de tomar cant_ideal de cartas de una utilidad 
+        especifica en una cantidad establecida de draws.
+        
+        Parametros:
+            uti_ideal: la utilidad de la carta que se desea tomar del deck, tipo string.
+            cant_draw: la cantidad de cartas que toma del deck para intentar sacar la carta, tipo int
+            cant_ideal: la cantidad de cartas de la utilidad uti_ideal que desea tomar del deck, tipo int
+            
+        Returns:
+            prob_exito: la probabilidad de que saque una carta de la utilidad deseada, tipo float
+        '''
+        # La probabilidad de tomar una carta especifica del deck en una cantidad determinada de draws
+        # se comporta como una distribución hipergeométrica, pues se toman cartas del deck y no se 
+        # devuelven, entonces puedo calcular la probabilidad.
+        # Considere P(X = cant_ideal) = [(K, k) * (N - K, n-k)] / [(N, n)] donde los parentesis son
+        # coeficientes binomiales y:
+            # N: cantidad de cartas en el deck
+            # K: cantidad de cartas con la utilidad deseada en el deck
+            # n: cantidad de cartas que se toman del deck
+            # k: cantidad de cartas de la utilidad deseada que se quieren sacar
+        
+        
         
         
         
