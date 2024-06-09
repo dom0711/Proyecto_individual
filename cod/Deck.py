@@ -109,6 +109,11 @@ class Mazo():
         lista con las cartas que saca del deck de forma aleatoria cuando toma una cantidad
         de cartas del deck igual a num_draw.
         
+        Este método toma en cuenta que las cartas tomadas no se devuelven al deck, osea revisa
+        cuales cartas se tomaron y actualiza los atributos del objeto, además permite usar en
+        combinación con otros métodos que también consideran que las cartas tomadas no vuelven al
+        mazo.
+        
         Parametros:
             num_draw: se refiere a la cantidad de cartas que se toman del deck, tipo int.
             
@@ -125,25 +130,39 @@ class Mazo():
         for i in range(0, num_draw):
             draw = self.__deck_list.pop(random.randint(0, len(self.__deck_list) - 1))
             mano.append(draw)
+            # Reviso la utilidad de la carta tomada del mazo, esto lo hago en varios métodos.
             indice_draw = self.__card_stats.index[self.__card_stats["Carta"] == draw][0]
-            temp_starters = self.__starters
-            temp_extenders = self.__extenders
-            temp_defensives = self.__defensives
-            temp_combo_pieces = self.__combo_pieces
-            temp_garnets = self.__garnets
-            temp_non_engine = self.__non_engine
             if self.__card_stats.loc[indice_draw, "Utilidad"] == "Starter":
-                self.__starters = temp_starters - 1
+                self.__starters = self.__starters - 1
             elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Extender":
-                self.__extenders = temp_extenders - 1
+                self.__extenders = self.__extenders - 1
             elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Defensive":
-                self.__defensives = temp_defensives - 1
+                self.__defensives = self.__defensives - 1
             elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Combo piece":
-                self.__combo_pieces = temp_combo_pieces - 1
+                self.__combo_pieces = self.__combo_pieces - 1
             elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Garnet":
-                self.__garnets = temp_garnets - 1
+                self.__garnets = self.__garnets - 1
             elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Non engine":
-                self.__non_engine = temp_non_engine - 1
+                self.__non_engine = self.__non_engine - 1
+        return mano
+    
+    def starting_hand_sample(self):
+        '''
+        Método que simula la primera mano que se toma del mazo, osea siempre toma 5 cartas del mazo
+        similar al anterior pero este no considera que las cartas no vuelven al mazo, a nivel del código
+        las cartas no se eliminan de la lista de cartas y los demás atributos del objeto no cambían,
+        simplemente toma las cartas y las copia en una lista, a nivel físico es equivalente a tomar 5 
+        cartas del mazo, devolverlas y revolver el mazo.
+        
+        Returns:
+            starting_hand: las 5 cartas que toma del deck.
+        '''
+        mano = []
+        import random
+        import pandas as pd
+        for i in range(0, 5):
+            draw = self.__deck_list[random.randint(0, len(self.__deck_list) - 1)]
+            mano.append(draw)
         return mano
     
     def draw_card(self, deck, mano):
@@ -159,25 +178,88 @@ class Mazo():
         draw = self.__deck_list.pop(random.randint(0, len(self.__deck_list) - 1))
         indice_draw = self.__card_stats.index[self.__card_stats["Carta"] == draw][0]
         mano.append(draw)
-        temp_starters = self.__starters
-        temp_extenders = self.__extenders
-        temp_defensives = self.__defensives
-        temp_combo_pieces = self.__combo_pieces
-        temp_garnets = self.__garnets
-        temp_non_engine = self.__non_engine
         if self.__card_stats.loc[indice_draw, "Utilidad"] == "Starter":
-            self.__starters = temp_starters - 1
+            self.__starters = self.__starters - 1
         elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Extender":
-            self.__extenders = temp_extenders - 1
+            self.__extenders = self.__extenders - 1
         elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Defensive":
-            self.__defensives = temp_defensives - 1
+            self.__defensives = self.__defensives - 1
         elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Combo piece":
-            self.__combo_pieces = temp_combo_pieces - 1
+            self.__combo_pieces = self.__combo_pieces - 1
         elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Garnet":
-            self.__garnets = temp_garnets - 1
+            self.__garnets = self.__garnets - 1
         elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Non engine":
-            self.__non_engine = temp_non_engine - 1
+            self.__non_engine = self.__non_engine - 1
     
+    def tourney_sample(self):
+        '''
+        Método que simula las 45 manos diferentes que se tomarían del mazo durante un 
+        YCS(Yu-Gi-Oh! Championship Series), considerando más de 512 participantes, en total el ganador
+        debería jugar un máximo de 15 partidos, cada una con un máximo de 3 duelos, pues el ganador es 
+        el primero en ganar 2 duelos.
+        Este método simula las 45 manos que tomaría el jugador y las califica.
+
+        Returns
+            total_hands: todas las manos que tomaría el jugador durante el torneo, tipo list.
+        '''
+        total_hands = []
+        # Para la simulación de las 45 manos simplemente uso un for
+        for i in range(0, 5):
+            hand = self.starting_hand_sample()
+            total_hands.append(hand)
+        return total_hands
+    
+    def rank_hand(self, hand):
+        '''
+        Método que se encarga de asignarle una calificación a una mano que se toma del mazo
+
+        Parametros:
+            hand: se refiere a la mano que se tiene en este momento, tipo list.
+            
+        Returns:
+            score: la calificación que se le asigna a la mano, tipo string
+        '''
+        # Con un for puedo revisar cada carta en la mano que se recibe
+        # Para la calificación vamos primero a definir algunos principios:
+          # 1. En la partida es fundamental lograr el combo de nuestro mazo, es lo más importante.
+          # 2. Las cartas tienen una sola utilidad, osea solo pueden ser usadas una vez por turno.
+          # 3. Asumimos que el jugador tiene la capacidad de completar el combo y usar sus cartas de
+               # manera correcta.
+        # 4. Hay cartas que no aportan nada al tomarlas del deck y en algunos casos incluso perjudican.
+        # 5. Para calificar se debe entender que tan importante es cada tipo de carta
+             # Starters: son las cartas más importantes del mazo, pues con ellas se puede lograr 
+                          # el combo.
+             # Extenders: son importantes pues si nuestros starters son negados o interrumpidos
+                          # nos permiten continuar el combo.
+             # Defensive: igual de importantes que los Starters, son cartas defensivas que ayudan
+                          # a evitar el combo del oponente y evitan que nuestro oponente interrumpa el
+                          # combo.
+             # Combo piece: no aportan nada a la mano del inicio, ya que estás cartas las ibamos a
+                          # obtener en algún momento durante el combo sin importar si las tomas del mazo
+                          # desde un inicio.
+             # Garnet: el termino Garnet se refiere a cartas que se deben incluir en el mazo por
+                          # obligación, pero que nunca se quieren ver en la mano del inicio, perjudican.
+             # Non engine: son cartas que no necesariamente ayudan a completar el combo, más bien
+                          # lo complementan.
+        # Vamos a guardar en una lista la utilidad de cada una de las cartas de la mano
+        util_hand = []
+        for i in range(0, len(hand) - 1):
+            draw = hand[i]
+            indice_draw = self.__card_stats.index[self.__card_stats["Carta"] == draw][0]
+            if self.__card_stats.loc[indice_draw, "Utilidad"] == "Starter":
+                util_hand.append("Starter")
+            elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Extender":
+                util_hand.append("Extender")
+            elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Defensive":
+                util_hand.append("Defensive")
+            elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Combo piece":
+                util_hand.append("Combo piece")
+            elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Garnet":
+                util_hand("Garnet")
+            elif self.__card_stats.loc[indice_draw, "Utilidad"] == "Non engine":
+                util_hand.append("Non engine") 
+            
+        
     def calc_hypergeom(self, uti_ideal, cant_ideal, cant_draw):
         '''
         Método que determina la probabilidad de tomar cant_ideal de cartas de una utilidad 
