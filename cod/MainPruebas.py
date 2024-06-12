@@ -10,7 +10,7 @@ from Deck import Mazo
 
 import pandas as pd
 
-ruta_deck_propio = "C:\\Users\\usuar\\Desktop\\CA0305\\Proyecto_individual\\docs\\deck_propio.xlsx"
+ruta_deck_propio = "C:\\Users\\usuar\\Desktop\\CA0305\\Proyecto_individual\\data\\deck_propio.xlsx"
 deck_propio_stats = pd.read_excel(ruta_deck_propio)
 deck_propio_list = ["Effect Veiler", "Effect Veiler", "Effect Veiler","Jet Synchron", 
                     "Kurikara Divincarnate", "Rescue-ACE Hydrant", "Rescue-ACE Hydrant","Snake-Eye Ash", 
@@ -52,7 +52,7 @@ deck_propio = Mazo(num_starters_propio, num_extenders_propio, num_defensives_pro
                    num_combo_pieces_propio, num_garnets_propio, num_non_engine_propio, 
                    deck_propio_list, deck_propio_stats)
 
-ruta_netdeck = "C:\\Users\\usuar\\Desktop\\CA0305\\Proyecto_individual\\docs\\netdecked.xlsx"
+ruta_netdeck = "C:\\Users\\usuar\\Desktop\\CA0305\\Proyecto_individual\\data\\netdecked.xlsx"
 netdeck_stats = pd.read_excel(ruta_netdeck)
 netdeck_list = ["Effect Veiler", "Effect Veiler", "Effect Veiler", "Rescue-ACE Hydrant", 
                 "Rescue-ACE Hydrant", "Snake-Eyes Poplar", "Snake-Eyes Poplar", "Maxx C", "Maxx C",
@@ -89,7 +89,7 @@ netdeck = Mazo(num_starters_netdeck, num_extenders_netdeck, num_defensives_netde
                    netdeck_list, netdeck_stats)
 
 
-# hand_propio = deck_propio.hand_sample(5)
+hand_propio = deck_propio.hand_sample(5)
 # hand_netdeck = netdeck.hand_sample(5)
 
 # print("Mano propia: \n" f'{hand_propio}')
@@ -101,7 +101,9 @@ netdeck = Mazo(num_starters_netdeck, num_extenders_netdeck, num_defensives_netde
 # tourney_hands = deck_propio.tourney_sample()
 
 # for i in range(0, 4):
-#     print("Mano " f'{i + 1}' ": " f'{tourney_hands[i]}' "\n") 
+#     print("Mano " f'{i + 1}' ": " f'{tourney_hands[i]}' "\n")
+
+score = deck_propio.rank_hand(hand_propio)
 
 
 
