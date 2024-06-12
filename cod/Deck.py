@@ -9,7 +9,7 @@ class Mazo():
     
     # Constructor
     def __init__(self, starters, extenders, defensives, combo_pieces, garnets,
-                 non_engine, deck_list, card_stats):
+                 non_engine, deck_list, card_stats, deck_inicial):
         '''
         Constructor del objeto Mazo, crea un objeto de tipo Mazo.
         
@@ -25,6 +25,8 @@ class Mazo():
                         del Deck en el Deck, tipo int.
             deck_list: se refiere a la lista de cartas en el Deck, tipo list.
             card_stats: se refiere a la base que contiene la utilidad de cada carta.
+            deck_inicial: contiene los atributos iniciales del Deck, se crea pensando en que en
+                          algún momento se necesitará restablecer los atributos al estado inicial.
         
         Returns:
             Un objeto de tipo Mazo
@@ -38,6 +40,8 @@ class Mazo():
         self.__non_engine = non_engine
         self.__deck_list = deck_list
         self.__card_stats = card_stats
+        self.__deck_inicial = [starters, extenders, defensives, combo_pieces, garnets, non_engine,
+                               deck_list, card_stats]
         
     #Getters
     @property 
@@ -64,6 +68,9 @@ class Mazo():
     @property 
     def card_stats(self):
         return self.__card_stats
+    @property 
+    def deck_inicial(self):
+        return self.__deck_inicial
     
     # Setters
     @starters.setter 
