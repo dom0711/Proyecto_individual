@@ -134,8 +134,8 @@ class Mazo():
         # Importo random para usar randint y así obtener un número aleatorio entre 0 y el tamaño
         # del deck - 1, uso el comando pop() porque cuando se toma una carta del deck se debe eliminar
         # de las posibles cartas a tomar la próxima vez que se tome una carta del deck
+        # Importar los paquetes al inicio
         import random
-        import pandas as pd
         for i in range(0, num_draw):
             draw = self.__deck_list.pop(random.randint(0, len(self.__deck_list) - 1))
             mano.append(draw)
@@ -213,7 +213,7 @@ class Mazo():
         '''
         total_hands = []
         # Para la simulación de las 45 manos simplemente uso un for
-        for i in range(0, 5):
+        for i in range(0, 45):
             hand = self.starting_hand_sample()
             total_hands.append(hand)
         return total_hands
@@ -293,34 +293,46 @@ class Mazo():
             # 4. El non-engine aporta muy poco al combo directamente, más que todo permite hacerlo un 
             #    poco más fuerte, entonces no es necesario tener estas cartas en la mano.
         # Con estas consideraciones podemos definir algunos rangos o categorias:
-            # S+: Una mano que tiene 1 starter, 1 extender, 2 defensive, 1 non_engine
-            # S: Una mano que tiene 1 starter, 1 extender, 1 defensive, y las otras dos cartas pueden
-            #    ser cualesquiera, excepto garnets.
+            # S+: Una mano que tiene 1 starter, 1 extender, 1 defensive, 1 non_engine y la última carta
+            #     puede ser cualquiera.
+            # S: Una mano que tiene 1 starter, 1 extender, 1 defensive, 0 non_engine y las otras dos cartas
+            #     pueden ser cualesquiera.
             # A: Una mano que tiene 1 starter, 0 extender, 1 defensive, y las otras tres pueden ser
-            #    cualesquiera, excepto garnets.
+            #    cualesquiera.
             # B: Una mano que tiene 1 starter, 1 extender, 0 defensive, y las otras tres pueden ser
-            #    cualesquiera, excepto garnets.
-            # C: Una mano que tiene 1 starter, 0 extender, 0 defensive y las otras tres pueden ser
-            #    cualesquiera, incluidas garnets.
+            #    cualesquiera.
+            # C: Una mano que tiene 1 starter, 0 extender, 0 defensive y las otras cuatro pueden ser
+            #    cualesquiera.
             # D: Toda mano que no contenga un starter.
             # F: Toda mano que no contenga un starter y uno o más garnets.
-        if garnets == 0:
-            if starters == 0:
-                return "D"
-            else:
-                if defensives == 0:
-                    if extenders == 0:
-                        return "C"
+        if starters >= 1:
+            if non_engine >= 1:
+                if defensives >= 1:
+                    if extenders >= 1:
+                        return "S+"
                     else:
-                        return "B"
-                else:
-                    if extenders == 0:
                         return "A"
+                else:
+                    if extenders >= 1:
+                        return "B"
                     else:
+                        return "C"
+            else:
+                if defensives >= 1:
+                    if extenders >= 1:
                         return "S"
+                    else:
+                        return "A"
+                else:
+                    if extenders >= 1:
+                        return "B"
+                    else:
+                        return "C"
         else:
-            if starters == 0:
+            if garnets >= 1:
                 return "F"
+            else:
+                return "D"
         
     def calc_hypergeom(self, util_ideal, cant_deseo, cant_draw):
         '''
@@ -378,7 +390,30 @@ class Mazo():
         self.__deck_list = self.__deck_inicial[6]
         self.__card_stats = self.__deck_inicial[7]
         
+    def eval_deck(self):
+        '''
+        Método que intenta evaluar el mazo basandose en el ranking que reciben las 45 posibles manos que
+        se tendrían que jugar en un YCS
         
-        
+        Considerando la naturaleza del juego es posible quedar eliminado del torneo con solamente dos malas
+        manos seguidas, la idea es que un mazo excelente nunca saca una mano que sea peor a B, por lo que me
+        interesa revisar el score minimo que se obtiene en las 45 manos y ver cuantas veces se da este.
+
+        Returns:
+            deck_score: la calificación del deck, tipo string, en este caso se usaran solo cuatro:
+                Tier 0: mazos que nunca tienen una mano peor que B.
+                Tier 1: mazos que tienen manos peores que B, pero que no sobrepasan un cuarto del total.
+                Tier 2: mazos que tienen manos peores que B y sobrepasan el cuarto del total.
+                Tier 3: mazos que tienen manos peores que B y sobrepasan la mitad del total.
+        '''
+        # Primero reseteo el deck antes de empezar para asegurarme de estar tomando desde el deck inicial
+        self.reset_deck()
+        # Después obtengo las 45 manos con el método tourney_sample()
+        total_manos = self.tourney_sample()
+        score_manos_total = []
+        # Reviso el score de cada mano y las guardo en una lista
+        for mano in total_manos:
+            score_manos_total.append(self.rank_hand(mano))
+        return score_manos_total
         
         
