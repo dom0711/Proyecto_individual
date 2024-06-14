@@ -40,8 +40,7 @@ class Mazo():
         self.__non_engine = non_engine
         self.__deck_list = deck_list
         self.__card_stats = card_stats
-        self.__deck_inicial = [starters, extenders, defensives, combo_pieces, garnets, non_engine,
-                               deck_list, card_stats]
+        self.__deck_inicial = deck_inicial
         
     #Getters
     @property 
@@ -97,6 +96,9 @@ class Mazo():
     @card_stats.setter 
     def card_stats(self, card_stats):
         self.__card_stats = card_stats
+    @deck_inicial.setter 
+    def deck_inicial(self, deck_inicial):
+        self.__deck_inicial = deck_inicial
     
     # Str
     def __str__(self):
@@ -319,22 +321,6 @@ class Mazo():
         else:
             if starters == 0:
                 return "F"
-            
-        # if starters == 0:
-        #     if garnets >= 2:
-        #         return "F"
-        #     else:
-        #         return "D"
-        # else:
-        #     if (extenders == 0) and (defensives == 0):
-        #         return "C"
-        #     else:
-        # elif (extenders == 1) and (defensives == 2) and (non_engine == 1):
-        #     return "S"
-        # elif (non_engine == 0) and (garnets == 0):
-        #     if (extenders >= 1) and (defensives >= 1) and ()
-        #     return "B"
-        # elif 
         
     def calc_hypergeom(self, util_ideal, cant_deseo, cant_draw):
         '''
@@ -373,7 +359,25 @@ class Mazo():
         bino_2 = (math.factorial(N - J)) / ((math.factorial(n - j)) * (math.factorial(N - J - n + j)))
         bino_3 = (math.factorial(N)) / ((math.factorial(n)) * (math.factorial(N - n)))
         prob_exito = (bino_1 * bino_2) / bino_3
-        return prob_exito 
+        return prob_exito
+    
+    def reset_deck(self):
+        '''
+        Método que reinicia el objeto a sus valores iniciales, util para cuando se quiere volver al
+        estado inicial del deck.
+        
+        No hace returns ni recibe parametros, modifica los atributos del objeto con los que se guardaron
+        desde el inicio.
+        '''
+        self.__starters = self.__deck_inicial[0]
+        self.__extenders = self.__deck_inicial[1]
+        self.__defensives = self.__deck_inicial[2]
+        self.__combo_pieces = self.__deck_inicial[3]
+        self.__garnets = self.__deck_inicial[4]
+        self.__non_engine = self.__deck_inicial[5]
+        self.__deck_list = self.__deck_inicial[6]
+        self.__card_stats = self.__deck_inicial[7]
+        
         
         
         
