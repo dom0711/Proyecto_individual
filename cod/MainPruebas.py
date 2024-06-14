@@ -92,7 +92,7 @@ deck_propio = Mazo(num_starters_propio, num_extenders_propio, num_defensives_pro
 #                    netdeck_list, netdeck_stats)
 
 
-hand_propio = deck_propio.hand_sample(5)
+# hand_propio = deck_propio.hand_sample(5)
 # hand_netdeck = netdeck.hand_sample(5)
 
 # print("Mano propia: \n" f'{hand_propio}')
@@ -106,9 +106,12 @@ hand_propio = deck_propio.hand_sample(5)
 # for i in range(0, 4):
 #     print("Mano " f'{i + 1}' ": " f'{tourney_hands[i]}' "\n")
 
-#score = deck_propio.rank_hand(hand_propio)
+# print(hand_propio)
+# print(deck_propio.rank_hand(hand_propio))
 
 
-deck_propio.reset_deck()
+#deck_propio.reset_deck()
+
+score_test = deck_propio.eval_deck()
 
 
