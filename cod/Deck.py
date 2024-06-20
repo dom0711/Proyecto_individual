@@ -402,10 +402,13 @@ class Mazo():
 
         Returns:
             deck_score: la calificación del deck, tipo string, en este caso se usaran solo cuatro:
-                Tier 0: mazos que nunca tienen una mano peor que B.
-                Tier 1: mazos que tienen manos peores que B, pero que no sobrepasan un cuarto del total.
-                Tier 2: mazos que tienen manos peores que B y sobrepasan el cuarto del total.
-                Tier 3: mazos que tienen manos peores que B y sobrepasan la mitad del total.
+                Tier 0: mazos que nunca tienen una mano peor o igual que B.
+                Tier 1: mazos que tienen manos peores que o iguales a B, pero no tiene manos peores que B 
+                        dos veces seguidas, osea puede que el mazo tenga malas manos pero nunca las tiene 
+                        seguidas
+                Tier 2: mazos que tienen manos peores que o iguales a B y tienen manos peores que B 
+                        seguidas, osea el mazo tiene manos malas y puede tenerlas seguidas
+                Tier 3: mazos que no tienen manos mejores que B, osea el mazo no saca buenas manos.
         '''
         # Primero reseteo el deck antes de empezar para asegurarme de estar tomando desde el deck inicial
         self.reset_deck()
@@ -439,4 +442,39 @@ class Mazo():
                 cant_D = cant_D + 1
             elif score == "F":
                 cant_F = cant_F + 1
+        # Ahora tengo contandas la cantidad de cada tipo de mano que obtuvo en las 45, procedo a revisar si
+        # el mazo solo produce manos malas osea peores que B, en ese caso solo puede ser Tier 3
+        if (("B" not in score_manos_total) and ("A" not in score_manos_total) 
+        and ("S" not in score_manos_total) and ("S+" not in score_manos_total)):
+            return "Tier 3"
+        # En caso que si produzca algunas manos buenas entonces se revisa si tiene manos malas, osea se
+        # se revisa si nunca produce una mano C, D, F o B
+        if (("B" not in score_manos_total) and ("C" not in score_manos_total) 
+        and ("D" not in score_manos_total) and ("F" not in score_manos_total)):
+            return "Tier 0"            
+        # Si ninguno de los dos if anteriores devuelven un valor entonces se puede asumir que el mazo 
+        # produce manos buenas y manos malas (caso usual), será Tier 1 o Tier 2, revisamos si produce manos
+        # malas seguidas para determinar cual de los dos
+        for i in range(0, len(score_manos_total)):
+            # Solo nos importa si se repiten manos malas entonces reviso si la actual es una mala o buena
+            if ((score_manos_total[i] == "C") or (score_manos_total[i] == "D") 
+            or (score_manos_total[i] == "C")):
+                # Revisamos si la siguiente también es mala, como es posible que la mano mala sea la última
+                # entonces reviso que i no sea de manera que cause un index out of range
+                if (i < len(score_manos_total) - 1):
+                    if ((score_manos_total[i + 1] == "C") or (score_manos_total[i + 1] == "D") 
+                    or (score_manos_total[i + 1] == "C")):
+                        return "Tier 2"
+        # Si se sale del for y no se devuelve el valor Tier 2 entonces el mazo debe ser Tier 1 entonces solo
+        # hago el return al final afuera del for
+        return "Tier 1"
+                
+                
+        
+        
+        
+        
+        
+        
+        
         
