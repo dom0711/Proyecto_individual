@@ -16,9 +16,9 @@ Interfaz
 # Primero importo los métodos del modulo Deck, y las librerias necesarias
 from Deck import Mazo
 import pandas as pd
-from tkinter import *
+import tkinter as tk
 
-# Antes de empezar con la construcción de la interfaz tengo que preparar algunas funciones que serán 
+# Antes de empezar con la construcción de la interfaz tengo que preparar algunas funciones que 
 # serán necesarias
 # La idea inicial para ingresar decks era pedirle al usuario que ingrese el archivo del deck en formato .YDK
 # después de investigar me di cuenta que no iba a ser posible pues los archivos .YDK lo que hacen en esencia
@@ -58,17 +58,44 @@ def deck_creator(ruta_deck):
                 num_non_engine, deck_list, base_deck, deck_inicial)
     return deck
 
-root =  Tk()
+# Tras investigar un poco no logré que el objeto quedará guardado cuando se apreta el botón
+# sospecho que la función si funciona pero como hace return se da un error pues no se guarda en
+# ningún lado.
+# Para resolver esto vamos a definir una variable, inicializada en Null llamada deck, y creo otra
+# función que se encarge de ejecutar la función deck_creator() y guarde el mazo creado.
+
+# Entonces el método deck_creator() se ejecuta en la función guardar_deck() y esta se ejecuta
+# cuando se presiona un botón, además se muestra un pop-up donde se confirme que el deck se creo
+deck = None
+# ruta_deck = "C:\\Users\\usuar\\Desktop\\CA0305\\Proyecto_individual\\data\\deck_propio.xlsx"
+def guardar_deck(ruta):
+    global deck
+    deck = deck_creator(ruta)
+    tk.messagebox.showinfo("Confirmación", f''' Deck list: {deck.deck_list} 
+            \n Cantidad de starters: {deck.starters} 
+            \n Cantidad de extenders: {deck.extenders}
+            \n Cantidad de cartas defensivas: {deck.defensives}
+            \n Cantidad de piezas del combo: {deck.combo_pieces}
+            \n Cantidad de Garnets: {deck.garnets}
+            \n Cantidad de non engine: {deck.non_engine}
+            \n Cantidad de cartas total: {len(deck.deck_list)}
+            ''')
+    
+root = tk.Tk()
 root.title("Deck Building Tool")
 root.geometry("900x650")
-
 # Para crear las pestañas lo puedo hacer con botones, estos botones una vez presionados cambian lo que se
 # ve en pantalla
-# pestnas será el espacio donde se pondrán los botones, Frame() me permite crear el espacio donde se pondrán
+# pestanas será el espacio donde se pondrán los botones, Frame() me permite crear el espacio donde se pondrán
 # los botones
-pestanas = Frame(root)
+pestanas = tk.Frame(root)
 pestanas.pack()
 
+# Uso Frame() para crear el espacio donde voy a poner los botones y casillas de texto de cada 
+# pestaña
+tab_1_content = tk.Frame(root)
+tab_2_content = tk.Frame(root)
+tab_3_content = tk.Frame(root)
 
 def show_tab(num_tab):
     '''
@@ -84,79 +111,52 @@ def show_tab(num_tab):
     tab_3_content.pack_forget()
 
     if num_tab == 1:
-        tab_1_content.pack(fill = BOTH, expand = True)
+        tab_1_content.pack(fill = tk.BOTH, expand = True)
     elif num_tab == 2:
-        tab_2_content.pack(fill = BOTH, expand = True)
+        tab_2_content.pack(fill = tk.BOTH, expand = True)
     elif num_tab == 3:
-        tab_3_content.pack(fill = BOTH, expand = True)
-
+        tab_3_content.pack(fill = tk.BOTH, expand = True)
 
 # Creo los botones que funcionaran como pestañas
-tab1_btn = Button(pestanas, text = "Crear mazo", bg = "gray", fg = "black", command = lambda: show_tab(1))
-tab1_btn.pack(side = LEFT, padx = 10, pady = 5)
+tab1_btn = tk.Button(pestanas, text = "Crear mazo", bg = "gray", fg = "black", 
+                     command = lambda: show_tab(1))
+tab1_btn.pack(side = tk.LEFT, padx = 10, pady = 5)
 
-tab2_btn = Button(pestanas, text = "Calculadora Hipergeometrica", bg = "gray", fg = "black", 
+tab2_btn = tk.Button(pestanas, text = "Calculadora Hipergeometrica", bg = "gray", fg = "black", 
                   command = lambda: show_tab(2))
-tab2_btn.pack(side = LEFT, padx = 10, pady = 5)
+tab2_btn.pack(side = tk.LEFT, padx = 10, pady = 5)
 
-tab3_btn = Button(pestanas, text = "Modo juego", bg = "gray", fg = "black", command = lambda: show_tab(3))
-tab3_btn.pack(side = LEFT, padx = 10, pady = 5)
+tab3_btn = tk.Button(pestanas, text = "Modo juego", bg = "gray", fg = "black", 
+                     command = lambda: show_tab(3))
+tab3_btn.pack(side = tk.LEFT, padx = 10, pady = 5)
 
-# Uso Frame() para crear el espacio donde voy a poner los botones y casillas de texto de cada pestaña
-tab_1_content = Frame(root)
-tab_2_content = Frame(root)
-tab_3_content = Frame(root)
 
-# Creo los botones y casillas de la pestaña 1, en este caso sería solamente una casilla donde se recibe
-# la ruta del documento de Excel donde se tiene la lista del deck.
-ruta_deck = Entry(tab_1_content, textvariable = StringVar(), font = ("Arial", 15))
-ruta_deck.pack(padx = 10, pady = 10)
+# Creo los botones y casillas de la pestaña 1, en este caso sería solamente una casilla 
+# donde se recibe la ruta del documento de Excel donde se tiene la lista del deck.
+# Para acceder a lo que el usuario escribe dentro de la casilla se debe hacer con un botón 
+# que guarde lo que el usuario escriba dentro de la casilla para luego usarlo, similar a como se
+# hizo con el deck
+ruta_deck = None
+casilla_ruta = tk.Entry(tab_1_content, width = 80, font = ("Arial", 12))
+casilla_ruta.pack(pady = 20)
+# Para guardar el texto se tiene que hacer con una función similar a como se hizo con el mazo.
+def guardar_ruta_deck():
+    global ruta_deck
+    ruta_deck = casilla_ruta.get()
+# Ahora creo el botón que guarda la ruta
+guardar_ruta_btn = tk.Button(tab_1_content, text = "Guardar ruta", bg = "gray", fg = "black",
+                              command = lambda: guardar_ruta_deck())
+guardar_ruta_btn.pack(pady = 20)
 
-crear_deck_btn = Button(tab_1_content, text = "Crear mazo", bg = "gray", fg = "black", 
-                  command = lambda: show_tab(2))
-crear_deck_btn.pack(padx = 10, pady = 10)
+crear_deck_btn = tk.Button(tab_1_content, text = "Crear mazo", bg = "gray", fg = "black", 
+                           font = ("Arial", 40), command = lambda: guardar_deck(ruta_deck))
+crear_deck_btn.pack(padx = 100, pady = 100)
+
 
 # Inicializo las petañas en la primera, la de creación de deck pues lo primero que se espera es que el
 # usuario creé el deck y luego haga las pruebas
 show_tab(1)
 
-
-
 # Ejecutar el bucle principal de Tkinter
 root.mainloop()
 
-
-
-# # adding menu bar in root window
-# # new item in menu bar labelled as 'New'
-# # adding more items in the menu bar 
-# menu = Menu(root)
-# item = Menu(menu)
-# item.add_command(label='New')
-# menu.add_cascade(label='File', menu=item)
-# root.config(menu=menu)
- 
-# # adding a label to the root window
-# lbl = Label(root, text = "Are you a Geek?")
-# lbl.grid()
- 
-# # adding Entry Field
-# txt = Entry(root, width=10)
-# txt.grid(column =1, row =0)
- 
- 
-# # function to display user text when
-# # button is clicked
-# def clicked():
- 
-#     res = "You wrote" + txt.get()
-#     lbl.configure(text = res)
- 
-# # button widget with red color text inside
-# btn = Button(root, text = "Click me" ,
-#              fg = "red", command=clicked)
-# # Set Button Grid
-# btn.grid(column=2, row=0)
- 
-# # Execute Tkinter
-# root.mainloop()
