@@ -11,49 +11,37 @@ from Deck import Mazo
 import pandas as pd
 
 ruta_deck_propio = "C:\\Users\\usuar\\Desktop\\CA0305\\Proyecto_individual\\data\\deck_propio.xlsx"
-deck_propio_stats = pd.read_excel(ruta_deck_propio)
 
-deck_propio_list = ["Effect Veiler", "Effect Veiler", "Effect Veiler","Jet Synchron", 
-                    "Kurikara Divincarnate", "Rescue-ACE Hydrant", "Rescue-ACE Hydrant","Snake-Eye Ash", 
-                    "Snake-Eye Oak", "Snake-Eyes Poplar", "Snake-Eyes Poplar", "Maxx C", "Maxx C", 
-                    "Maxx C", "Ash Blossom & Joyous Spring", "Ash Blossom & Joyous Spring", 
-                    "Ash Blossom & Joyous Spring", "Rescue-ACE Impulse", "Rescue-ACE Impulse", 
-                    "Rescue-ACE Air Lifter", "Rescue-ACE Air Lifter", "Rescue-ACE Air Lifter", 
-                    "Bystial Magnamhut", "Bystial Druiswurm", "Rescue-ACE Fire Attacker", 
-                    "Bystial Baldrake", "Kashtira Fenrir", "Kashtira Unicorn", "Rescue-ACE Fire Engine", 
-                    "Diabellstar the Black Witch", "Diabellstar the Black Witch", "Rescue-ACE Preventer",
-                    "Rescue-ACE Preventer", "Snake-Eyes Flamberge Dragon", "Snake-Eyes Flamberge Dragon",
-                    "Rescue-ACE Turbulence", "Rescue-ACE Turbulence", "Nibiru, the Primal Being", 
-                    "Reinforcement of the Army", "Sinful Spoils of Subversion - Snake-Eye", 
-                    "Bonfire", "Bonfire", "Bonfire", "Original Sinful Spoils - Snake-Eye", 
-                    "Original Sinful Spoils - Snake-Eye", "Rescue-ACE HQ", 
-                    "Pressured Plante Wraitsoth", "Divine Temple of the Snake-Eye", "Kashtira Birth", 
-                    "Called by the Grave", "Called by the Grave", "Crossout Designator", "RESCUE!", 
-                    "ALERT!", "EMERGENCY!", "EMERGENCY!", "EMERGENCY!", 
-                    "WANTED: Seeket of Sinful Spoils", "CONTAIN!", "EXTINGUISH!"]
+def deck_creator(ruta_deck):
+    base_deck = pd.read_excel(ruta_deck)
+    deck_list = []
+    for i in range(0, base_deck.shape[0]):
+        carta = base_deck.loc[i, "Carta"]
+        for j in range(0, base_deck.loc[i, "Cantidad"]):
+            deck_list.append(carta)
+    # Ahora tengo mi deck list completa, procedo a determinar cuales cartas son de cada utilidad
+    starters = base_deck[base_deck["Utilidad"] == "Starter"]
+    extenders = base_deck[base_deck["Utilidad"] == "Extender"]
+    defensives = base_deck[base_deck["Utilidad"] == "Defensive"]
+    combo_pieces = base_deck[base_deck["Utilidad"] == "Combo piece"]
+    garnets = base_deck[base_deck["Utilidad"] == "Garnet"]
+    non_engine = base_deck[base_deck["Utilidad"] == "Non engine"]
+    # Y encuentro la cantidad que se tiene de cada utilidad
+    num_starters = starters["Cantidad"].sum()
+    num_extenders = extenders["Cantidad"].sum()
+    num_defensives = defensives["Cantidad"].sum()
+    num_combo_pieces = combo_pieces["Cantidad"].sum()
+    num_garnets = garnets["Cantidad"].sum()
+    num_non_engine = non_engine["Cantidad"].sum()
+    # Por último creo la lista de valores iniciales para cuando resete el deck
+    deck_inicial = [num_starters, num_extenders, num_defensives, num_combo_pieces, num_garnets, 
+                    num_non_engine, deck_list, base_deck]
+    # Finalmente puedo crear mi objeto tipo Mazo
+    deck = Mazo(num_starters, num_extenders, num_defensives, num_combo_pieces, num_garnets, 
+                num_non_engine, deck_list, base_deck, deck_inicial)
+    return deck
 
-starters_propio = deck_propio_stats[deck_propio_stats["Utilidad"] == "Starter"]
-extenders_propio = deck_propio_stats[deck_propio_stats["Utilidad"] == "Extender"]
-defensives_propio = deck_propio_stats[deck_propio_stats["Utilidad"] == "Defensive"]
-combo_pieces_propio = deck_propio_stats[deck_propio_stats["Utilidad"] == "Combo piece"]
-garnets_propio = deck_propio_stats[deck_propio_stats["Utilidad"] == "Garnet"]
-non_engine_propio = deck_propio_stats[deck_propio_stats["Utilidad"] == "Non engine"]
-
-
-num_starters_propio = starters_propio["Cantidad"].sum()
-num_extenders_propio = extenders_propio["Cantidad"].sum()
-num_defensives_propio = defensives_propio["Cantidad"].sum()
-num_combo_pieces_propio = combo_pieces_propio["Cantidad"].sum()
-num_garnets_propio = garnets_propio["Cantidad"].sum()
-num_non_engine_propio = non_engine_propio["Cantidad"].sum()
-
-deck_propio_inicial = [num_starters_propio, num_extenders_propio,
-                       num_defensives_propio, num_combo_pieces_propio, num_garnets_propio,
-                       num_non_engine_propio, deck_propio_list, deck_propio_stats]
-
-deck_propio = Mazo(num_starters_propio, num_extenders_propio, num_defensives_propio, 
-                   num_combo_pieces_propio, num_garnets_propio, num_non_engine_propio, 
-                   deck_propio_list, deck_propio_stats, deck_propio_inicial)
+deck_propio = deck_creator(ruta_deck_propio)
 
 # ruta_netdeck = "C:\\Users\\usuar\\Desktop\\CA0305\\Proyecto_individual\\data\\netdecked.xlsx"
 # netdeck_stats = pd.read_excel(ruta_netdeck)
