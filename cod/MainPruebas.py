@@ -110,8 +110,8 @@ deck_propio = Mazo(num_starters_propio, num_extenders_propio, num_defensives_pro
 # print(deck_propio.rank_hand(hand_propio))
 
 
-#deck_propio.reset_deck()
+# deck_propio.reset_deck()
 
-score_test = deck_propio.eval_deck()
+# score_test = deck_propio.eval_deck()
 
 
