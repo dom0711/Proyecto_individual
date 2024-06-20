@@ -18,6 +18,46 @@ from Deck import Mazo
 import pandas as pd
 from tkinter import *
 
+# Antes de empezar con la construcción de la interfaz tengo que preparar algunas funciones que serán 
+# serán necesarias
+# La idea inicial para ingresar decks era pedirle al usuario que ingrese el archivo del deck en formato .YDK
+# después de investigar me di cuenta que no iba a ser posible pues los archivos .YDK lo que hacen en esencia
+# es incluir el identificador de cada carta en formato txt, los simuladores en linea lo que hacen es revisar
+# los valore de cada identificador y relacionarlo directamente a una carta y a sus valores, no tengo acceso
+# a la base de datos de todas las cartas y además son más de 10.000 cartas en el juego, y también no puede 
+# entender como se formateaban los archivos .YDK.
+# La segunda mejor opción me parece es pedirle al usuario que cargue un doc de Excel donde diga el nombre y
+# utilidad de la carta y la cantidad
+
+def deck_creator(ruta_deck):
+    base_deck = pd.read_excel(ruta_deck)
+    deck_list = []
+    for i in range(0, base_deck.shape[0]):
+        carta = base_deck.loc[i, "Carta"]
+        for j in range(0, base_deck.loc[i, "Cantidad"]):
+            deck_list.append(carta)
+    # Ahora tengo mi deck list completa, procedo a determinar cuales cartas son de cada utilidad
+    starters = base_deck[base_deck["Utilidad"] == "Starter"]
+    extenders = base_deck[base_deck["Utilidad"] == "Extender"]
+    defensives = base_deck[base_deck["Utilidad"] == "Defensive"]
+    combo_pieces = base_deck[base_deck["Utilidad"] == "Combo piece"]
+    garnets = base_deck[base_deck["Utilidad"] == "Garnet"]
+    non_engine = base_deck[base_deck["Utilidad"] == "Non engine"]
+    # Y encuentro la cantidad que se tiene de cada utilidad
+    num_starters = starters["Cantidad"].sum()
+    num_extenders = extenders["Cantidad"].sum()
+    num_defensives = defensives["Cantidad"].sum()
+    num_combo_pieces = combo_pieces["Cantidad"].sum()
+    num_garnets = garnets["Cantidad"].sum()
+    num_non_engine = non_engine["Cantidad"].sum()
+    # Por último creo la lista de valores iniciales para cuando resete el deck
+    deck_inicial = [num_starters, num_extenders, num_defensives, num_combo_pieces, num_garnets, 
+                    num_non_engine, deck_list, base_deck]
+    # Finalmente puedo crear mi objeto tipo Mazo
+    deck = Mazo(num_starters, num_extenders, num_defensives, num_combo_pieces, num_garnets, 
+                num_non_engine, deck_list, base_deck, deck_inicial)
+    return deck
+
 root =  Tk()
 root.title("Deck Building Tool")
 root.geometry("900x650")
