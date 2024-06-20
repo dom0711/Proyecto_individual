@@ -3,7 +3,12 @@
 Modulo Deck
 
 @author: Dominick Rodríguez Trejos - B76600
+
+En este modulo se desarrolla la clase Deck y sus métodos
 """
+
+import random
+import math
 
 class Mazo():
     
@@ -167,8 +172,6 @@ class Mazo():
             starting_hand: las 5 cartas que toma del deck.
         '''
         mano = []
-        import random
-        import pandas
         for i in range(0, 5):
             draw = self.__deck_list[random.randint(0, len(self.__deck_list) - 1)]
             mano.append(draw)
@@ -183,7 +186,6 @@ class Mazo():
             mano: se refiere a la mao que se tiene en el momento antes de tomar una carta 
                   más del deck, tipo list
         '''
-        import random
         draw = self.__deck_list.pop(random.randint(0, len(self.__deck_list) - 1))
         indice_draw = self.__card_stats.index[self.__card_stats["Carta"] == draw][0]
         mano.append(draw)
@@ -357,7 +359,6 @@ class Mazo():
             # J: cantidad de cartas con la utilidad deseada en el deck
             # n: cantidad de cartas que se toman del deck
             # j: cantidad de cartas de la utilidad deseada que se quieren sacar
-        import math
         util_lower = util_ideal.lower()
         # Para obtener el atributo usando el parametro util_ideal y sin hacer un montón de ifs vamos a
         # usar el comando getattr(), se toma como base lo visto en el siguiente sitio web:
@@ -414,6 +415,28 @@ class Mazo():
         # Reviso el score de cada mano y las guardo en una lista
         for mano in total_manos:
             score_manos_total.append(self.rank_hand(mano))
-        return score_manos_total
-        
+        # Ahora que tengo el score de las 45 manos podemos contar cuantas manos de cada tipo se obtienen y
+        # dependiendo de la cantidad de manos peores a B se le asigna un tier.
+        cant_S_plus = 0
+        cant_S = 0
+        cant_A = 0
+        cant_B = 0 
+        cant_C = 0 
+        cant_D = 0 
+        cant_F = 0 
+        for score in score_manos_total:
+            if score == "S+":
+                cant_S_plus = cant_S_plus + 1 
+            elif score == "S":
+                cant_S = cant_S + 1
+            elif score == "A":
+                cant_A = cant_A + 1
+            elif score == "B":
+                cant_B = cant_B + 1
+            elif score == "C":
+                cant_C = cant_C + 1
+            elif score == "D":
+                cant_D = cant_D + 1
+            elif score == "F":
+                cant_F = cant_F + 1
         
