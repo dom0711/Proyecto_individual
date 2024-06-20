@@ -101,7 +101,7 @@ deck_propio = Mazo(num_starters_propio, num_extenders_propio, num_defensives_pro
 # hand_propio_samples = []
 # hand_netdeck_samples = []
 
-# tourney_hands = deck_propio.tourney_sample()
+tourney_hands = deck_propio.tourney_sample()
 
 # for i in range(0, 4):
 #     print("Mano " f'{i + 1}' ": " f'{tourney_hands[i]}' "\n")
@@ -112,6 +112,8 @@ deck_propio = Mazo(num_starters_propio, num_extenders_propio, num_defensives_pro
 
 # deck_propio.reset_deck()
 
-# score_test = deck_propio.eval_deck()
-
-
+total_scores = []
+for i in range(0, 25):
+    total_scores.append(deck_propio.eval_deck())
+    
+print(total_scores)
