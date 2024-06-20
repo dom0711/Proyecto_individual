@@ -372,7 +372,7 @@ class Mazo():
         bino_2 = (math.factorial(N - J)) / ((math.factorial(n - j)) * (math.factorial(N - J - n + j)))
         bino_3 = (math.factorial(N)) / ((math.factorial(n)) * (math.factorial(N - n)))
         prob_exito = (bino_1 * bino_2) / bino_3
-        return prob_exito
+        return prob_exito * 100
     
     def reset_deck(self):
         '''
