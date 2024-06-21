@@ -7,6 +7,11 @@ Interfaz
 """
 
 # Para crear la inferfaz o app de nuestro proyecto vamos a utilizar la libreria Tkinter.
+# La mayoría del código que se utiliza se construyo a base de tutoriales y guías en línea,
+# pero principalmente las siguientes páginas web me ayudo mucho a entender como funcionan los widgets, 
+# comandos y código de Tkinter:
+    # https://realpython.com/python-gui-tkinter/
+    # https://www.geeksforgeeks.org/python-tkinter-entry-widget/
 # La idea será crear una ventana que muestre cuatro pestañas:
     # Crear Mazo: Desde aquí tenemos la opción de crear nuestro mazo desde un documento de Excel.
     # Calculadora Hipergeometrica: Desde aquí se pueden hacer las pruebas de consistencia del mazo.
@@ -66,7 +71,8 @@ def deck_creator(ruta_deck):
 # sospecho que la función si funciona pero como hace return se da un error pues no se guarda en
 # ningún lado.
 # Para resolver esto vamos a definir una variable, inicializada en Null llamada deck, y creo otra
-# función que se encarge de ejecutar la función deck_creator() y guarde el mazo creado.
+# función que se encarge de ejecutar la función deck_creator() y guarde el mazo creado, esta misma
+# idea se utiliza en el resto del código para diferentes variables que necesito crear y guardar.
 
 # Entonces el método deck_creator() se ejecuta en la función guardar_deck() y esta se ejecuta
 # cuando se presiona un botón, además se muestra un pop-up donde se confirme que el deck se creo
@@ -83,7 +89,8 @@ def guardar_deck(ruta):
             \n Cantidad de non engine: {deck.non_engine}
             \n Cantidad de cartas total: {len(deck.deck_list)}
             ''')
-    
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Ventana principal~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 root = tk.Tk()
 root.title("Deck Building Tool")
 root.geometry("900x650")
@@ -94,6 +101,7 @@ root.geometry("900x650")
 pestanas = tk.Frame(root)
 pestanas.pack()
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Pestañas~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Uso Frame() para crear el espacio donde voy a poner los botones y casillas de texto de cada 
 # pestaña
 tab_1_content = tk.Frame(root)
@@ -101,7 +109,8 @@ tab_2_content = tk.Frame(root)
 tab_3_content = tk.Frame(root)
 tab_4_content = tk.Frame(root)
 
-
+# Creo la función que activa o desactiva las pestañas, en esencia lo que hace es cambiar lo que 
+# aparece en la ventana cuando se presiona un botón
 def show_tab(num_tab):
     '''
     Método que muestra la pestaña o botón seleccionado, este método se llama dentro de los botones
@@ -141,34 +150,60 @@ tab4_btn = tk.Button(pestanas, text = "Modo torneo", bg = "gray", fg = "black",
                      font = ("Arial", 15), command = lambda: show_tab(4))
 tab4_btn.pack(side = tk.LEFT, padx = 10, pady = 5)
 
-
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Pestaña 1~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Creo los botones y casillas de la pestaña 1:
     # 1 casilla para que el usuario inserte la ruta del doc de Excel donde tiene guardado los datos
     # de su deck
     # 1 botón para guardar la ruta
     # 1 botón para crear y guardar su mazo
+    # 1 botón para mostrar el mazo
+    
 # Para acceder a lo que el usuario escribe dentro de la casilla se debe hacer con un botón 
 # que guarde lo que el usuario escriba dentro de la casilla para luego usarlo, similar a como se
 # hizo con el deck
 ruta_deck = None
+# Se crea el label que sirve como instrucción de lo que se debe insertar en la casilla
 ins_ruta = tk.Label(tab_1_content, text = "Ingrese la ruta del mazo: ", font = ("Arial", 12))
 ins_ruta.pack(side = tk.TOP, pady = 8)
+
+# Se crea la casilla donde el usuario escribe la ruta del deck
 cas_ruta = tk.Entry(tab_1_content, width = 80, font = ("Arial", 12), justify = tk.CENTER)
 cas_ruta.pack(side = tk.TOP, pady = 8)
+
 # Para guardar el texto se tiene que hacer con una función similar a como se hizo con el mazo.
 def guardar_ruta_deck():
     global ruta_deck
     ruta_deck = cas_ruta.get()
-# # Ahora creo el botón que guarda la ruta
+    
+# Ahora creo el botón que guarda la ruta
 guardar_ruta_btn = tk.Button(tab_1_content, text = "Guardar", bg = "gray", fg = "black",
                               font = ("Arial", 12, "bold"), command = lambda: guardar_ruta_deck())
 guardar_ruta_btn.pack(pady = 20)
+
 # Por último creo el botón que se encarga de crear y guardar el deck
 crear_deck_btn = tk.Button(tab_1_content, text = "Crear mazo", bg = "gray", fg = "black", 
                            font = ("Arial", 12, "bold"), command = lambda: guardar_deck(ruta_deck))
 crear_deck_btn.pack(padx = 100, pady = 100)
 
+# Creo la función que muestra el mazo, esta la voy a usar en todas las petañas
+def show_deck():
+    global deck
+    tk.messagebox.showinfo("Confirmación", f''' Deck list: {deck.deck_list} 
+            \n Cantidad de starters: {deck.starters} 
+            \n Cantidad de extenders: {deck.extenders}
+            \n Cantidad de cartas defensivas: {deck.defensives}
+            \n Cantidad de piezas del combo: {deck.combo_pieces}
+            \n Cantidad de Garnets: {deck.garnets}
+            \n Cantidad de non engine: {deck.non_engine}
+            \n Cantidad de cartas total: {len(deck.deck_list)}
+            ''')
 
+# Creo el botón para mostrar el deck en su estado actual
+show_deck_tab_1_btn = tk.Button(tab_1_content, text = "Ver mazo", bg = "gray", fg = "black", 
+                           font = ("Arial", 12, "bold"), command = lambda: show_deck())
+show_deck_tab_1_btn.pack(pady = 20)
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Pestaña 2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Creo los botones y casillas de la pestaña 2:
     # 1 casilla donde el usuario pueda especificar la utilidad de la carta que desea tomar del deck
     # 1 casilla donde especifique la cantidad de copias de cartas de esa utilidad que desea tomar
@@ -179,56 +214,173 @@ crear_deck_btn.pack(padx = 100, pady = 100)
     # 1 botón que al presionarlo creé un pop-up donde se muestre la calificación de la mano tomada.
     # 1 botón que le permita al usuario devolver al deck a su estado inicial.
     # Botones respectivos para cada casilla para guardar los valores insertados
+    # 1 botón para mostrar el mazo
+    
 # Se sigue un formato muy similar al usado en la pestaña 1
+# Creo la función que guarda la utilidad que el usuario escribe en la casilla
 util = None
-ins_util = tk.Label(tab_2_content, text = "Ingrese la utilidad deseada: ", font = ("Arial", 12))
-ins_util.pack(side = tk.TOP, pady = 8)
-cas_util = tk.Entry(tab_2_content, width = 20, font = ("Arial", 12), justify = tk.CENTER)
-cas_util.pack(side = tk.TOP, pady = 8)
 def guardar_util():
+    '''
+    Método que guardar la utilidad que el usuario escribe en la casilla
+    
+    '''
     global util
     util = cas_util.get()
+
+# Creo el label que le indique al usuario lo que debe ingresar en la casilla
+ins_util = tk.Label(tab_2_content, text = "Ingrese la utilidad deseada: ", font = ("Arial", 12))
+ins_util.pack(side = tk.TOP, pady = 8)
+
+# Creo la casilla donde el usuario ingresa la utilidad que se desea tomar del mazo
+cas_util = tk.Entry(tab_2_content, width = 20, font = ("Arial", 12), justify = tk.CENTER)
+cas_util.pack(side = tk.TOP, pady = 8)
+
+# Creo el botón que guarda la utilidad ingresada
 guardar_util_btn = tk.Button(tab_2_content, text = "Guardar", bg = "gray", fg = "black",
                               font = ("Arial", 12, "bold"), command = lambda: guardar_util())
 guardar_util_btn.pack(pady = 10)
 
+# Creo la función que guarda la cantidad de cartas a tomar del mazo
 draw = None
-ins_draw = tk.Label(tab_2_content, text = "Ingrese la cantidad de cartas a tomar: ", 
-                    font = ("Arial", 12))
-ins_draw.pack(side = tk.TOP, pady = 8)
-cas_draw = tk.Entry(tab_2_content, width = 20, font = ("Arial", 12), justify = tk.CENTER)
-cas_draw.pack(side = tk.TOP, pady = 8)
 def guardar_draw():
     global draw
     draw = int(cas_draw.get())
+
+# Creo el label que le indique al usuario lo que debe ingresar en la casilla
+ins_draw = tk.Label(tab_2_content, text = "Ingrese la cantidad de cartas a tomar: ", 
+                    font = ("Arial", 12))
+ins_draw.pack(side = tk.TOP, pady = 8)
+
+# Creo la casilla donde el usuario ingresa la cantidad de cartas a tomar del mazo
+cas_draw = tk.Entry(tab_2_content, width = 20, font = ("Arial", 12), justify = tk.CENTER)
+cas_draw.pack(side = tk.TOP, pady = 8)
+
+# Creo el botón que guarda la cantidad de cartas a tomar del mazo
 guardar_draw_btn = tk.Button(tab_2_content, text = "Guardar", bg = "gray", fg = "black", 
                              font = ("Arial", 12, "bold"), command = lambda: guardar_draw())
 guardar_draw_btn.pack(pady = 10)
 
+# Creo la función que guarda la cantidad de cartas de esa utilidad que se desean
 util_draw = None
-ins_util_draw = tk.Label(tab_2_content, text = "Ingrese la cantidad de cartas que desea: ", 
-                    font = ("Arial", 12))
-ins_util_draw.pack(side = tk.TOP, pady = 8)
-cas_util_draw = tk.Entry(tab_2_content, width = 20, font = ("Arial", 12), justify = tk.CENTER)
-cas_util_draw.pack(side = tk.TOP, pady = 8)
 def guardar_util_draw():
     global util_draw
     util_draw = int(cas_util_draw.get())
+
+# Creo el label que le indique al usuario lo que debe ingresar en la casilla
+ins_util_draw = tk.Label(tab_2_content, text = "Ingrese la cantidad de cartas que desea: ", 
+                    font = ("Arial", 12))
+ins_util_draw.pack(side = tk.TOP, pady = 8)
+
+# Creo la casilla donde el usuario ingresa la cantidad de cartas de la utilidad que desea
+cas_util_draw = tk.Entry(tab_2_content, width = 20, font = ("Arial", 12), justify = tk.CENTER)
+cas_util_draw.pack(side = tk.TOP, pady = 8)
+
+# Creo el botón que guarda la cantidad de cartas de la utilidad que desea
 guardar_util_draw_btn = tk.Button(tab_2_content, text = "Guardar", bg = "gray", fg = "black",
                               command = lambda: guardar_util_draw(), font = ("Arial", 12, "bold"))
 guardar_util_draw_btn.pack(pady = 20)
 
-prob_exito = None
 # Creo la función que aplique el método calc_hypergeom() y creé un pop-up con la probabilidad de
 # éxito, luego el botón que lo ejecute
+prob_exito = None
 def show_prob_exito(util, util_draw, draw):
     global prob_exito
     prob_exito = deck.calc_hypergeom(util, util_draw, draw)
     tk.messagebox.showinfo("Probabilidad de exito", f'''{prob_exito}%''')
-guardar_util_draw_btn = tk.Button(tab_2_content, text = "Calcular probabilidad de éxito", 
+
+# Creo el botón que calcule la probabilidad de exito y la muestre en un pop-up
+show_prob_exito_btn = tk.Button(tab_2_content, text = "Calcular probabilidad de éxito", 
                                   bg = "gray", fg = "black", font = ("Arial", 12, "bold"), 
                                   command = lambda: show_prob_exito(util, util_draw, draw))
-guardar_util_draw_btn.pack(pady = 20)
+show_prob_exito_btn.pack(pady = 20)
+
+# Creo el botón para mostrar el deck en su estado actual
+show_deck_tab_2_btn = tk.Button(tab_2_content, text = "Ver mazo", bg = "gray", fg = "black", 
+                           font = ("Arial", 12, "bold"), command = lambda: show_deck())
+show_deck_tab_2_btn.pack(pady = 20)
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Pestaña 3~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Creo los botones y casillas de la pestaña 3:
+    # 1 casilla donde el usuario pueda indicar cuantas cartas va a tomar del mazo para su mano.
+    # 1 botón que le permite tomar la cantidad de cartas deseadas del mazo.
+    # 1 botón que le permita calificar la mano que tomo.
+    # 1 botón que le permita agregar una carta más a la mano
+    # 1 botón que le permita resetear el mazo para empezar desde su estado inicial
+    # Botones respectivos para cada casilla para guardar los valores insertados
+    # 1 botón para mostrar el mazo
+
+# Creo la función que guarda la cantidad de cartas que quiere tomar del mazo
+draw_hand = None
+def guardar_draw_hand():
+    global draw_hand
+    draw_hand = int(cas_draw_hand.get())
+    
+# Creo el label que le indique al usuario lo que debe ingresar en la casilla
+ins_draw_hand = tk.Label(tab_3_content, text = "Ingrese la cantidad de cartas a tomar: ", 
+                    font = ("Arial", 12))
+ins_draw_hand.pack(side = tk.TOP, pady = 8)
+
+# Creo la casilla donde el usuario ingresa la cantidad de cartas que quiere tomar
+cas_draw_hand = tk.Entry(tab_3_content, width = 20, font = ("Arial", 12), justify = tk.CENTER)
+cas_draw_hand.pack(side = tk.TOP, pady = 8)
+
+# Creo el botón que guarda la cantidad de cartas a tomar del mazo
+guardar_draw_hand_btn = tk.Button(tab_3_content, text = "Guardar", bg = "gray", fg = "black", 
+                             font = ("Arial", 12, "bold"), command = lambda: guardar_draw_hand())
+guardar_draw_hand_btn.pack(pady = 10)
+
+# Defino la función que crea la mano y luego la enseña en un pop-up
+hand_juego = None
+def show_hand(draw_hand):
+    global hand_juego
+    hand_juego = deck.hand_sample(draw_hand)
+    tk.messagebox.showinfo("Mano tomada", f'''{hand_juego}''')
+
+# Creo el botón que toma y enseña la mano tomada
+show_hand_btn = tk.Button(tab_3_content, text = "Mostrar mano", 
+                                  bg = "gray", fg = "black", font = ("Arial", 12, "bold"), 
+                                  command = lambda: show_hand(draw_hand))
+show_hand_btn.pack(pady = 20)
+
+# Creo la función que toma una carta del mazo y enseña la mano en un pop-up
+def draw_one(hand):
+    deck.draw_card(hand)
+    tk.messagebox.showinfo("Mano", f'''{hand}''')
+
+# Creo el botón para tomar una carta del mazo
+draw_one_btn = tk.Button(tab_3_content, text = "Draw", bg = "gray", fg = "black", 
+                         font = ("Arial", 12, "bold"), command = lambda: draw_one(hand_juego))
+draw_one_btn.pack(pady = 20)
+
+# Creo la función que califica la mano que se toma
+score_hand = None
+def show_score_hand(hand):
+    global score_hand
+    score_hand = deck.rank_hand(hand_juego)
+    tk.messagebox.showinfo("Score", f'''Tu mano es una: {score_hand}''')
+    
+# Creo el botón para calificar la mano tomada
+score_hand_btn = tk.Button(tab_3_content, text = "Calificar mano", bg = "gray", fg = "black",
+                           font = ("Arial", 12, "bold"), 
+                           command = lambda: show_score_hand(hand_juego))
+score_hand_btn.pack(pady = 20)
+
+# Creo la función que resetea el deck a su estado inicial
+def reset_deck():
+    global deck
+    deck = deck_creator(ruta_deck)
+    tk.messagebox.showinfo("Confirmación", "Mazo reseteado a su estado inicial")
+    
+# Creo el botón para resetear el mazo a su estado inicial
+reset_deck_btn = tk.Button(tab_3_content, text = "Reset Deck", bg = "gray", fg = "black",
+                           font = ("Arial", 12, "bold"), 
+                           command = lambda: reset_deck())
+reset_deck_btn.pack(pady = 20)
+
+# Creo el botón que muestra el deck en su estado actual
+show_deck_tab_3_btn = tk.Button(tab_3_content, text = "Ver mazo", bg = "gray", fg = "black", 
+                           font = ("Arial", 12, "bold"), command = lambda: show_deck())
+show_deck_tab_3_btn.pack(pady = 20)
 
 # Inicializo las petañas en la primera, la de creación de deck pues lo primero que se espera es que el
 # usuario creé el deck y luego haga las pruebas
