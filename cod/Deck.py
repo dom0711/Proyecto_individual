@@ -177,12 +177,11 @@ class Mazo():
             mano.append(draw)
         return mano
     
-    def draw_card(self, deck, mano):
+    def draw_card(self, mano):
         '''
         Método que agrega una carta a la mano de las cartas disponible en el deck
         
         Parametros:
-            deck: se refiere a las cartas que se tienen disponibles en el deck, tipo list
             mano: se refiere a la mao que se tiene en el momento antes de tomar una carta 
                   más del deck, tipo list
         '''
