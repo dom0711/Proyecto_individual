@@ -123,6 +123,7 @@ def show_tab(num_tab):
     tab_1_content.pack_forget()
     tab_2_content.pack_forget()
     tab_3_content.pack_forget()
+    tab_4_content.pack_forget()
 
     if num_tab == 1:
         tab_1_content.pack(fill = tk.BOTH, expand = True)
@@ -382,10 +383,61 @@ show_deck_tab_3_btn = tk.Button(tab_3_content, text = "Ver mazo", bg = "gray", f
                            font = ("Arial", 12, "bold"), command = lambda: show_deck())
 show_deck_tab_3_btn.pack(pady = 20)
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Pestaña 4~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Creo los botones y casillas de la pestaña 3:
+    # 1 botón que le permita al usuario tomar una mano inicial del mazo.
+    # 1 botón que le permita al usuario calificar la mano tomada
+    # 1 botón que califique el deck del usuario
+    
+# Creo la función que toma una mano inicial del deck (5 cartas del deck en su estado inicial)
+hand_torneo = None
+def draw_sample_hand():
+    '''
+    Método que toma una mano inicial del mazo en su estado inicial
+    
+    Returns:
+        Un pop-up con la mano inicial
+    '''
+    global hand_torneo
+    hand_torneo = deck.starting_hand_sample()
+    tk.messagebox.showinfo("Mano inicial", f'''{hand_torneo}''')
+
+# Creo el botón que permite tomar una mano inicial y la muestra
+show_draw_sample_hand_btn = tk.Button(tab_4_content, text = "Tomar mano inicial", bg = "gray", 
+                                      fg = "black", font = ("Arial", 12, "bold"), 
+                                      command = lambda: draw_sample_hand())
+show_draw_sample_hand_btn.pack(pady = 40)
+    
+# Creo el botón para calificar la mano tomada, aquí voy a usar la función que creé en la pestaña 3
+score_hand_sample_btn = tk.Button(tab_4_content, text = "Calificar mano", bg = "gray", fg = "black",
+                           font = ("Arial", 12, "bold"), 
+                           command = lambda: show_score_hand(hand_torneo))
+score_hand_sample_btn.pack(pady = 40)
+
+# Creo la función que va a evaluar el mazo
+deck_score = None
+def score_deck():
+    '''
+    Método que evalua el mazo
+    
+    Returns:
+        Un pop-up con la calificación del mazo
+    '''
+    global deck_score
+    deck_score = deck.eval_deck()
+    tk.messagebox.showinfo("Clasificación del mazo", f'''{deck_score}''')
+    
+# Creo el botón para calificar el mazo
+score_deck_btn = tk.Button(tab_4_content, text = "Calificar mazo", bg = "gray", fg = "black",
+                           font = ("Arial", 12, "bold"), 
+                           command = lambda: score_deck())
+score_deck_btn.pack(pady = 40)
+
+
 # Inicializo las petañas en la primera, la de creación de deck pues lo primero que se espera es que el
 # usuario creé el deck y luego haga las pruebas
 show_tab(1)
 
-# Ejecutar el bucle principal de Tkinter
+# Ejecutar el bucle principal de Tkinter, osea iniciar la aplicación
 root.mainloop()
 
