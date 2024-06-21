@@ -39,6 +39,15 @@ import tkinter as tk
 # nombre y utilidad de la carta y la cantidad
 
 def deck_creator(ruta_deck):
+    '''
+    Método que se encarga de crear el mazo
+    
+    Parametros:
+        ruta_deck: corresponde a la ruta del documento Excel donde se tiene la información del mazo
+                   tipo string
+    Returns:
+        deck: el mazo creado, objeto tipo Mazo
+    '''
     base_deck = pd.read_excel(ruta_deck)
     deck_list = []
     for i in range(0, base_deck.shape[0]):
@@ -78,6 +87,15 @@ def deck_creator(ruta_deck):
 # cuando se presiona un botón, además se muestra un pop-up donde se confirme que el deck se creo
 deck = None
 def guardar_deck(ruta):
+    '''
+    Método que guarda el mazo creado en una variable global llamada deck
+    
+    Parametros:
+        ruta: corresponde a la ruta del documento Excel donde se tiene la información del mazo
+              tipo string
+    Returns:
+        Un pop-up con el deck creado
+    '''
     global deck
     deck = deck_creator(ruta)
     tk.messagebox.showinfo("Confirmación", f''' Deck list: {deck.deck_list} 
@@ -173,6 +191,11 @@ cas_ruta.pack(side = tk.TOP, pady = 8)
 
 # Para guardar el texto se tiene que hacer con una función similar a como se hizo con el mazo.
 def guardar_ruta_deck():
+    '''
+    Método que guarda la ruta del archivo de Excel que contiene la información del deck, la ruta 
+    el usuario la escribe en una casilla
+
+    '''
     global ruta_deck
     ruta_deck = cas_ruta.get()
     
@@ -188,6 +211,13 @@ crear_deck_btn.pack(padx = 100, pady = 100)
 
 # Creo la función que muestra el mazo, esta la voy a usar en todas las petañas
 def show_deck():
+    '''
+    Método que muestra el mazo en su estado actual, se usa en todas las pestañas por si el usuario
+    quiere ver las estadisticas del deck en ese momento.
+    
+    Returns:
+        Un pop-up con el mazo
+    '''
     global deck
     tk.messagebox.showinfo("Confirmación", f''' Deck list: {deck.deck_list} 
             \n Cantidad de starters: {deck.starters} 
@@ -244,6 +274,10 @@ guardar_util_btn.pack(pady = 10)
 # Creo la función que guarda la cantidad de cartas a tomar del mazo
 draw = None
 def guardar_draw():
+    '''
+    Método que guardar la cantidad de cartas a tomar del mazo que el usuario escribe en la casilla
+    
+    '''
     global draw
     draw = int(cas_draw.get())
 
@@ -264,6 +298,11 @@ guardar_draw_btn.pack(pady = 10)
 # Creo la función que guarda la cantidad de cartas de esa utilidad que se desean
 util_draw = None
 def guardar_util_draw():
+    '''
+    Método que guardar la cantidad de cartas de la utilidad que se desean tomar del mazo que el }
+    usuario escribe en la casilla
+    
+    '''
     global util_draw
     util_draw = int(cas_util_draw.get())
 
@@ -285,6 +324,19 @@ guardar_util_draw_btn.pack(pady = 20)
 # éxito, luego el botón que lo ejecute
 prob_exito = None
 def show_prob_exito(util, util_draw, draw):
+    '''
+    Método que calcula la probabilidad de éxito de tomar la cantidad de cartas de la utilidad 
+    deseada que el usuario indico en las casillas anteriores
+    
+    Parametros:
+        util: la utilidad de la carta que se desea tomar del mazo, tipo string
+        util_draw: la cantidad de cartas de esas utilidad que se desean tomar del mazo, tipo int
+        draw: la cantidad de cartas que se toman del mazo.
+    
+    Returns:
+        Un pop-up con la probabilidad de éxito.
+    
+    '''
     global prob_exito
     prob_exito = deck.calc_hypergeom(util, util_draw, draw)
     tk.messagebox.showinfo("Probabilidad de exito", f'''{prob_exito}%''')
@@ -313,6 +365,10 @@ show_deck_tab_2_btn.pack(pady = 20)
 # Creo la función que guarda la cantidad de cartas que quiere tomar del mazo
 draw_hand = None
 def guardar_draw_hand():
+    '''
+    Método que guardar la cantidad de cartas a tomar del mazo que el usuario escribe en la casilla
+    
+    '''
     global draw_hand
     draw_hand = int(cas_draw_hand.get())
     
@@ -333,6 +389,16 @@ guardar_draw_hand_btn.pack(pady = 10)
 # Defino la función que crea la mano y luego la enseña en un pop-up
 hand_juego = None
 def show_hand(draw_hand):
+    '''
+    Método que toma la cantidad de cartas indicadas por el usuario y muestra la mano tomada
+    
+    Parametros:
+        draw_hand: cantidad de cartas que se tomaran del mazo, tipo int
+        
+    Returns:
+        Un pop-up que muestra las cartas que se tomaron del mazo
+    
+    '''
     global hand_juego
     hand_juego = deck.hand_sample(draw_hand)
     tk.messagebox.showinfo("Mano tomada", f'''{hand_juego}''')
@@ -345,6 +411,16 @@ show_hand_btn.pack(pady = 20)
 
 # Creo la función que toma una carta del mazo y enseña la mano en un pop-up
 def draw_one(hand):
+    '''
+    Método que toma una carta del mazo y la agrega a la mano que se tiene en ese momento
+    
+    Parametros:
+        hand: corresponde a la mano que se tiene en ese momento, tipo list
+    
+    Returns:
+        Un pop-up que muestra la mano con la nueva carta agregada
+    
+    '''
     deck.draw_card(hand)
     tk.messagebox.showinfo("Mano", f'''{hand}''')
 
@@ -356,6 +432,16 @@ draw_one_btn.pack(pady = 20)
 # Creo la función que califica la mano que se toma
 score_hand = None
 def show_score_hand(hand):
+    '''
+    Método que califica la mano actual
+    
+    Parametros:
+        hand: corresponde a la mano que se tiene en ese momento, tipo list
+    
+    Returns:
+        Un pop-up que muestra la calificación de la mano actual
+    
+    '''
     global score_hand
     score_hand = deck.rank_hand(hand_juego)
     tk.messagebox.showinfo("Score", f'''Tu mano es una: {score_hand}''')
@@ -368,6 +454,10 @@ score_hand_btn.pack(pady = 20)
 
 # Creo la función que resetea el deck a su estado inicial
 def reset_deck():
+    '''
+    Método que resetea el mazo a su estado inicial, como si se volviera a crear desde el inicio
+    
+    '''
     global deck
     deck = deck_creator(ruta_deck)
     tk.messagebox.showinfo("Confirmación", "Mazo reseteado a su estado inicial")
@@ -388,6 +478,7 @@ show_deck_tab_3_btn.pack(pady = 20)
     # 1 botón que le permita al usuario tomar una mano inicial del mazo.
     # 1 botón que le permita al usuario calificar la mano tomada
     # 1 botón que califique el deck del usuario
+    # 1 botón para ver el mazo en su estado actual
     
 # Creo la función que toma una mano inicial del deck (5 cartas del deck en su estado inicial)
 hand_torneo = None
@@ -398,6 +489,11 @@ def draw_sample_hand():
     Returns:
         Un pop-up con la mano inicial
     '''
+    # Como el modo torneo siempre quiere trabajar con el deck en su estado inicial, lo voy a resetear
+    # en todas las funciones de esta pestaña, y como los métodos que se usan no quitan las cartas del
+    # mazo solamente tengo que resetear al inicio de las funciones
+    global deck
+    deck = deck_creator(ruta_deck)
     global hand_torneo
     hand_torneo = deck.starting_hand_sample()
     tk.messagebox.showinfo("Mano inicial", f'''{hand_torneo}''')
@@ -423,6 +519,8 @@ def score_deck():
     Returns:
         Un pop-up con la calificación del mazo
     '''
+    global deck
+    deck = deck_creator(ruta_deck)
     global deck_score
     deck_score = deck.eval_deck()
     tk.messagebox.showinfo("Clasificación del mazo", f'''{deck_score}''')
@@ -432,6 +530,11 @@ score_deck_btn = tk.Button(tab_4_content, text = "Calificar mazo", bg = "gray", 
                            font = ("Arial", 12, "bold"), 
                            command = lambda: score_deck())
 score_deck_btn.pack(pady = 40)
+
+# Creo el botón que muestra el deck en su estado actual
+show_deck_tab_4_btn = tk.Button(tab_4_content, text = "Ver mazo", bg = "gray", fg = "black", 
+                           font = ("Arial", 12, "bold"), command = lambda: show_deck())
+show_deck_tab_4_btn.pack(pady = 20)
 
 
 # Inicializo las petañas en la primera, la de creación de deck pues lo primero que se espera es que el
