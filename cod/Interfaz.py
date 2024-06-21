@@ -443,7 +443,7 @@ def show_score_hand(hand):
     
     '''
     global score_hand
-    score_hand = deck.rank_hand(hand_juego)
+    score_hand = deck.rank_hand(hand)
     tk.messagebox.showinfo("Score", f'''Tu mano es una: {score_hand}''')
     
 # Creo el botón para calificar la mano tomada
