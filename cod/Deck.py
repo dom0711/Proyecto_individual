@@ -117,6 +117,7 @@ class Mazo():
                 \n Cantidad de cartas total: {len(self.__deck_list)}
                 '''
     # Métodos
+    
     def hand_sample(self, num_draw):
         '''
         Método que devuelve una mano del tamaño num_draw, usualmente 5, osea produce una 
@@ -137,8 +138,8 @@ class Mazo():
         # Creo una lista vacía, aquí pondré las cartas que toma aletoriamente del deck
         mano = []
         # Importo random para usar randint y así obtener un número aleatorio entre 0 y el tamaño
-        # del deck - 1, uso el comando pop() porque cuando se toma una carta del deck se debe eliminar
-        # de las posibles cartas a tomar la próxima vez que se tome una carta del deck
+        # del deck - 1, uso el comando pop() porque cuando se toma una carta del deck se debe 
+        # eliminar de las posibles cartas a tomar la próxima vez que se tome una carta del deck
         # Importar los paquetes al inicio
         import random
         for i in range(0, num_draw):
@@ -342,7 +343,8 @@ class Mazo():
         
         Parametros:
             util_ideal: la utilidad de la carta que se desea tomar del deck, tipo string.
-            cant_draw: la cantidad de cartas que toma del deck para intentar sacar la carta, tipo int
+            cant_draw: la cantidad de cartas que toma del deck para intentar sacar la carta, 
+                       tipo int
             cant_deseo: la cantidad de cartas de la utilidad uti_ideal que desea tomar del deck, 
                         tipo int
             
@@ -359,10 +361,10 @@ class Mazo():
             # n: cantidad de cartas que se toman del deck
             # j: cantidad de cartas de la utilidad deseada que se quieren sacar
         util_lower = util_ideal.lower()
-        # Para obtener el atributo usando el parametro util_ideal y sin hacer un montón de ifs vamos a
-        # usar el comando getattr(), se toma como base lo visto en el siguiente sitio web:
+        # Para obtener el atributo usando el parametro util_ideal y sin hacer un montón de ifs 
+        # vamos a usar el comando getattr(), se toma como base lo visto en el siguiente sitio web:
             # https://micro.recursospython.com/recursos/la-funcion-getattr.html
-        # Además, voy a usar nombres cortos y sencillos para las variables porque la formula es larga.
+        # Además, voy a usar nombres cortos para las variables porque la formula es larga
         J = getattr(self, util_lower)
         j = cant_deseo
         N = len(self.__deck_list)
@@ -378,8 +380,8 @@ class Mazo():
         Método que reinicia el objeto a sus valores iniciales, util para cuando se quiere volver al
         estado inicial del deck.
         
-        No hace returns ni recibe parametros, modifica los atributos del objeto con los que se guardaron
-        desde el inicio.
+        No hace returns ni recibe parametros, modifica los atributos del objeto con los que 
+        se guardaron desde el inicio.
         '''
         self.__starters = self.__deck_inicial[0]
         self.__extenders = self.__deck_inicial[1]
@@ -392,19 +394,20 @@ class Mazo():
         
     def eval_deck(self):
         '''
-        Método que intenta evaluar el mazo basandose en el ranking que reciben las 45 posibles manos que
-        se tendrían que jugar en un YCS
+        Método que intenta evaluar el mazo basandose en el ranking que reciben las 45 posibles manos 
+        que se tendrían que jugar en un YCS
         
-        Considerando la naturaleza del juego es posible quedar eliminado del torneo con solamente dos malas
-        manos seguidas, la idea es que un mazo excelente nunca saca una mano que sea peor a B, por lo que me
-        interesa revisar el score minimo que se obtiene en las 45 manos y ver cuantas veces se da este.
+        Considerando la naturaleza del juego es posible quedar eliminado del torneo con solamente 
+        dos malas manos seguidas, la idea es que un mazo excelente nunca saca una mano que sea 
+        peor a B, por lo que me interesa revisar el score minimo que se obtiene en 
+        las 45 manos y ver cuantas veces se da este.
 
         Returns:
             deck_score: la calificación del deck, tipo string, en este caso se usaran solo cuatro:
                 Tier 0: mazos que nunca tienen una mano peor o igual que B.
-                Tier 1: mazos que tienen manos peores que o iguales a B, pero no tiene manos peores que B 
-                        dos veces seguidas, osea puede que el mazo tenga malas manos pero nunca las tiene 
-                        seguidas
+                Tier 1: mazos que tienen manos peores que o iguales a B, pero no tiene manos 
+                        peores que B dos veces seguidas, osea puede que el mazo tenga malas manos 
+                        pero nunca las tiene seguidas
                 Tier 2: mazos que tienen manos peores que o iguales a B y tienen manos peores que B 
                         seguidas, osea el mazo tiene manos malas y puede tenerlas seguidas
                 Tier 3: mazos que no tienen manos mejores que B, osea el mazo no saca buenas manos.
