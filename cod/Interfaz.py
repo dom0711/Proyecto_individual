@@ -37,7 +37,6 @@ import tkinter as tk
 # entender como se formateaban los archivos .YDK.
 #La segunda mejor opción me parece es pedirle al usuario que cargue un doc de Excel donde diga el
 # nombre y utilidad de la carta y la cantidad
-
 def deck_creator(ruta_deck):
     '''
     Método que se encarga de crear el mazo
@@ -129,6 +128,7 @@ tab_4_content = tk.Frame(root)
 
 # Creo la función que activa o desactiva las pestañas, en esencia lo que hace es cambiar lo que 
 # aparece en la ventana cuando se presiona un botón
+
 def show_tab(num_tab):
     '''
     Método que muestra la pestaña o botón seleccionado, este método se llama dentro de los botones
@@ -251,10 +251,6 @@ show_deck_tab_1_btn.pack(pady = 20)
 # Creo la función que guarda la utilidad que el usuario escribe en la casilla
 util = None
 def guardar_util():
-    '''
-    Método que guardar la utilidad que el usuario escribe en la casilla
-    
-    '''
     global util
     util = cas_util.get()
 
@@ -537,8 +533,8 @@ show_deck_tab_4_btn = tk.Button(tab_4_content, text = "Ver mazo", bg = "gray", f
 show_deck_tab_4_btn.pack(pady = 20)
 
 
-# Inicializo las petañas en la primera, la de creación de deck pues lo primero que se espera es que el
-# usuario creé el deck y luego haga las pruebas
+# Inicializo las petañas en la primera, la de creación de deck pues lo primero que se espera es que 
+# el usuario creé el deck y luego haga las pruebas
 show_tab(1)
 
 # Ejecutar el bucle principal de Tkinter, osea iniciar la aplicación
