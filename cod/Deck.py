@@ -48,65 +48,183 @@ class Mazo():
         self.__deck_inicial = deck_inicial
         
     #Getters
-    @property 
+    @property
     def starters(self):
+        '''
+        Método Get del atributo starters de la clase
+
+        Returns:
+            El atributo starters de la clase
+        '''
         return self.__starters
     @property 
     def extenders(self):
+        '''
+        Método Get del atributo extenders de la clase
+
+        Returns:
+            El atributo extenders de la clase
+        '''
         return self.__extenders
     @property 
     def defensives(self):
+        '''
+        Método Get del atributo defensives de la clase
+
+        Returns:
+            El atributo defensives de la clase
+        '''
         return self.__defensives
     @property 
     def combo_pieces(self):
+        '''
+        Método Get del atributo combo_pieces de la clase
+
+        Returns:
+            El atributo combo_pieces de la clase
+        '''
         return self.__combo_pieces
     @property 
     def garnets(self):
+        '''
+        Método Get del atributo garnets de la clase
+
+        Returns:
+            El atributo garnets de la clase
+        '''
         return self.__garnets
     @property 
     def non_engine(self):
+        '''
+        Método Get del atributo non_engine de la clase
+
+        Returns:
+            El atributo non_engine de la clase
+        '''
         return self.__non_engine
     @property 
     def deck_list(self):
+        '''
+        Método Get del atributo deck_list de la clase
+
+        Returns:
+            El atributo deck_list de la clase
+        '''
         return self.__deck_list
     @property 
     def card_stats(self):
+        '''
+        Método Get del atributo card_stats de la clase
+
+        Returns:
+            El atributo card_stats de la clase
+        '''
         return self.__card_stats
     @property 
     def deck_inicial(self):
+        '''
+        Método Get del atributo deck_inicial de la clase
+
+        Returns:
+            El atributo deck_inicial de la clase
+        '''
         return self.__deck_inicial
     
     # Setters
     @starters.setter 
     def starters(self, starters):
+        '''
+        Método Set del atributo starters de la clase, asgina al atributo starters el valor starters
+
+        Parametros:
+            starters: corresponde al número de starters en el mazo, tipo int
+        '''
         self.__starters = starters
     @extenders.setter 
     def extenders(self, extenders):
+        '''
+        Método Set del atributo extenders de la clase, asgina al atributo extenders el valor extenders
+
+        Parametros:
+            extenders: corresponde al número de extenders en el mazo, tipo int
+        '''
         self.__extenders = extenders
     @defensives.setter 
     def defensives(self, defensives):
+        '''
+        Método Set del atributo defensives de la clase, asgina al atributo defensives el valor defensives
+
+        Parametros:
+            defensives: corresponde al número de defensives en el mazo, tipo int
+        '''
         self.__defensives = defensives
     @combo_pieces.setter 
     def combo_pieces(self, combo_pieces):
+        '''
+        Método Set del atributo combo_pieces de la clase, asgina al atributo combo_pieces el valor 
+        combo_pieces
+
+        Parametros:
+            combo_pieces: corresponde al número de combo_pieces en el mazo, tipo int
+        '''
         self.__combo_pieces = combo_pieces
     @garnets.setter 
     def garnets(self, garnets):
+        '''
+        Método Set del atributo garnets de la clase, asgina al atributo garnets el valor garnets
+
+        Parametros:
+            garnets: corresponde al número de garnets en el mazo, tipo int
+        '''
         self.__garnets = garnets
     @non_engine.setter 
     def non_engine(self, non_engine):
+        '''
+        Método Set del atributo non_engine de la clase, asgina al atributo non_engine el valor non_engine
+
+        Parametros:
+            non_engine: corresponde al número de non_engine en el mazo, tipo int
+        '''
         self.__non_engine = non_engine
     @deck_list.setter 
     def deck_list(self, deck_list):
+        '''
+        Método Set del atributo deck_list de la clase, asgina al atributo deck_list el valor deck_list
+
+        Parametros:
+            deck_list: corresponde la lista de cartas del mazo, tipo list
+        '''
         self.__deck_list = deck_list
     @card_stats.setter 
     def card_stats(self, card_stats):
+        '''
+        Método Set del atributo card_stats de la clase, asgina al atributo card_stats el valor card_stats
+
+        Parametros:
+            card_stats: corresponde al una base de datos que corresponde a la información de las carats del 
+            mazo, tipo data frame de pandas
+        '''
         self.__card_stats = card_stats
     @deck_inicial.setter 
     def deck_inicial(self, deck_inicial):
+        '''
+        Método Set del atributo deck_inicial de la clase, asgina al atributo deck_inicial el valor 
+        deck_inicial
+
+        Parametros:
+            deck_inicial: corresponde a una lista que contiene la información del mazo en su estado inicial, 
+            tipo list
+        '''
         self.__deck_inicial = deck_inicial
     
     # Str
     def __str__(self):
+        '''
+        Método str de la clase
+        
+        Returns:
+            Imprime los atributos del objeto en forma de string.
+        '''
         return f''' Deck list: {self.__deck_list} 
                 \n Cantidad de starters: {self.__starters} 
                 \n Cantidad de extenders: {self.__extenders}
@@ -116,8 +234,7 @@ class Mazo():
                 \n Cantidad de non engine: {self.__non_engine}
                 \n Cantidad de cartas total: {len(self.__deck_list)}
                 '''
-    # Métodos
-    
+    # Métodos 
     def hand_sample(self, num_draw):
         '''
         Método que devuelve una mano del tamaño num_draw, usualmente 5, osea produce una 
