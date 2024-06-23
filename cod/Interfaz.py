@@ -180,6 +180,7 @@ tab4_btn.pack(side = tk.LEFT, padx = 10, pady = 5)
 # Para acceder a lo que el usuario escribe dentro de la casilla se debe hacer con un botón 
 # que guarde lo que el usuario escriba dentro de la casilla para luego usarlo, similar a como se
 # hizo con el deck
+
 ruta_deck = None
 # Se crea el label que sirve como instrucción de lo que se debe insertar en la casilla
 ins_ruta = tk.Label(tab_1_content, text = "Ingrese la ruta del mazo: ", font = ("Arial", 12))
@@ -251,6 +252,10 @@ show_deck_tab_1_btn.pack(pady = 20)
 # Creo la función que guarda la utilidad que el usuario escribe en la casilla
 util = None
 def guardar_util():
+    '''
+    Método que guarda la utilidad deseada que el usuario escribe en la casilla
+    
+    '''
     global util
     util = cas_util.get()
 
